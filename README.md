@@ -1,4 +1,4 @@
 EmpireCity
 ==========
 
-Collection of Softcode I wrote for EmpireCity.
+Empire city Character generation system for NWOD

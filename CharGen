@@ -1,0 +1,563 @@
+&CG.INFO.EMAIL CharGen=
+  $+semail *:
+    @break [hasflag(%#,approved)];
+    [if(hasattr(%#,semail),[pemit(%#,[ansi(hr,CG:)]%bYou've already set your email. If you want to change it use +semail/force *)],[set(%#,semail:%0)][set(%#/semail,W)][set(%#/semail,hidden)][pemit(%#,[ansi(hr,CG:)]%bYou have set your email to [ansi(hw,%0)])])]
+-
+&CG.INFO.FEMAIL CharGen=
+  $+semail/force *:
+    @break [hasflag(%#,approved)];
+    [set(%#,semail:%0)][pemit(%#,[ansi(hr,CG:)]%bYour email has been set to [ansi(hw,%0)])]
+-
+&CG.INFO.FULLNAME CharGen=
+  $+fullname *:
+    @break [hasflag(%#,approved)];
+    [set(%#,INFO.FULLNAME:%0)][set(%#/INFO.FULLNAME,hidden)][set(%#/INFO.FULLNAME,wizard)];
+    @fo %#=look
+-
+&CG.INFO.GENDER CharGen=
+  $+gender *:
+    @break [hasflag(%#,approved)];
+    @switch [strmatch(%0,Male)][strmatch(%0,Female)]=10,
+    {
+      @fo %#=@sex me=Male
+    }
+    ,01,
+    {
+      @fo %#=@sex me=Female
+    }
+    ,[pemit(%#,[ansi(hr,CG:)]%bGender must be Male or Female.)];
+    @fo %#=look
+-
+&CG.INFO.RACE CharGen=
+  $+race *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,Races)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid race. Type +db/view Races to see them all.)];
+    [set(%#,INFO.RACE:[extract([lattr([xget(#893,Races)]/*)],[match([lattr([xget(#893,races)]/*)],%0)],1, )])][set(%#/INFO.RACE,hidden)][set(%#/INFO.RACE,wizard)];
+    @fo %#=look
+-
+&CG.INFO.VIRTUE CharGen=
+  $+virtue *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,Virtues)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid virtue. Type +db/view virtues to see them all.)];
+    [set(%#,INFO.virtue:[extract([lattr([xget(#893,virtues)]/*)],[match([lattr([xget(#893,virtues)]/*)],%0)],1, )])][set(%#/INFO.virtue,hidden)][set(%#/INFO.virtue,wizard)];
+    @fo %#=look
+-
+&CG.INFO.VICE CharGen=
+  $+vice *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,Vices)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid vice. Type +db/view vices to see them all.)];
+    [set(%#,INFO.vice:[extract([lattr([xget(#893,vices)]/*)],[match([lattr([xget(#893,vices)]/*)],%0)],1, )])][set(%#/INFO.vice,hidden)][set(%#/INFO.vice,wizard)];
+    @fo %#=look
+-
+&CG.INFO.CONCEPT CharGen=
+  $+concept *:
+    @break [hasflag(%#,approved)];
+    @assert [lte(strlen(%0),50)]=[pemit(%#,[ansi(hr,CG:)]%bYour concept should be 50 characters or less. You currently have [strlen(%0)] characters. Please shorten your concept.)];
+    [set(%#,INFO.CONCEPT:%0)][set(%#/INFO.CONCEPT,hidden)][set(%#/INFO.CONCEPT,w)];
+    @fo %#=look
+-
+&CG.INFO.RESET CharGen=
+  $+info/reset:
+    [iter([lattr(%#/info*)],[set(%#,##:)])][pemit(%#,[ansi(hr,CG:)]%bInfo reset.)]
+-
+&CG.INFO.IMMTYPE CharGen=
+  $+immtype *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,Immtype)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid Immtype. Type +db/view immtype to see them all.)];
+    [set(%#,INFO.immtype:[extract([lattr([xget(#893,immtype)]/*)],[match([lattr([xget(#893,immtype)]/*)],%0)],1, )])][set(%#/INFO.immtype,hidden)][set(%#/INFO.immtype,wizard)];
+    @fo %#=look
+-
+&CG.INFO.SEEMING CharGen=
+  $+seeming *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,seeming)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid Seeming. Type +db/view Seeming to see them all.)];
+    [set(%#,INFO.seeming:[extract([lattr([xget(#893,seeming)]/*)],[match([lattr([xget(#893,seeming)]/*)],%0)],1, )])][set(%#/INFO.seeming,hidden)][set(%#/INFO.seeming,wizard)];
+    @fo %#=look
+-
+&CG.INFO.KITH CharGen=
+  $+kith *:
+    @break [hasflag(%#,approved)];
+    @assert [hasattr(%#,info.seeming)]=[pemit(%#,[ansi(hr,CG:)]%bPlease pick a seeming before picking kiths.)];
+    @assert [match([lattr([xget(#893,[xget(%#,info.seeming)]kith)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid [xget(%#,info.seeming)] kith. Type +db/view [xget(%#,info.seeming)]kith to see them all.)];
+    [set(%#,INFO.kith:[extract([lattr([xget(#893,[xget(%#,info.seeming)]kith)]/*)],[match([lattr([xget(#893,[xget(%#,info.seeming)]kith)]/*)],%0)],1, )])][set(%#/INFO.kith,hidden)][set(%#/INFO.kith,wizard)];
+    @fo %#=look
+-
+&CG.INFO.KITH2 CharGen=
+  $+kith2 *:
+    @break [hasflag(%#,approved)];
+    @assert [match([cat([lattr([xget(#893,beastkith)]/*)],[lattr([xget(#893,darklingkith)]/*)],[lattr([xget(#893,fairestkith)]/*)],[lattr([xget(#893,wizenedkith)]/*)],[lattr([xget(#893,elementalkith)]/*)],[lattr([xget(#893,ogrekith)]/*)])],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid kith. Type +db/view <seeming>kith to see the kiths for each seeming.)];
+    [set(%#,INFO.kith2:[ucstr(%0)])][set(%#/INFO.kith2,hidden)][set(%#/INFO.kith2,wizard)];
+    @fo %#=look
+-
+&CG.INFO.ENTITLEMENT CharGen=
+  $+entitlement *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,entitlements)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid Entitlement. Type +db/view entitlements to see them all.)];
+    [set(%#,INFO.entitlement:[extract([lattr([xget(#893,entitlements)]/*)],[match([lattr([xget(#893,entitlements)]/*)],%0)],1, )])][set(%#/INFO.entitlement,hidden)][set(%#/INFO.entitlement,wizard)];
+    @fo %#=look
+-
+&CG.INFO.CLAN CharGen=
+  $+clan *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,clan)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid clan. Type +db/view clan to see them all.)];
+    [set(%#,INFO.clan:[extract([lattr([xget(#893,clan)]/*)],[match([lattr([xget(#893,clan)]/*)],%0)],1, )])][set(%#/INFO.clan,hidden)][set(%#/INFO.clan,wizard)];
+    @fo %#=look
+-
+&BLOODLINE CharGen=
+  $+bloodline *:
+    @break [hasflag(%#,approved)];
+    @assert [hasattr(%#,info.clan)]=[pemit(%#,[ansi(hr,CG:)]%bPlease pick a clan before picking a bloodline.)];
+    @assert [match([lattr([xget(#893,[xget(%#,info.clan)]bloodline)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid [xget(%#,info.clan)] bloodline. Type +db/view [xget(%#,info.clan)]bloodline to see them all.)];
+    [set(%#,INFO.bloodline:[extract([lattr([xget(#893,[xget(%#,info.clan)]bloodline)]/*)],[match([lattr([xget(#893,[xget(%#,info.clan)]bloodline)]/*)],%0)],1, )])][set(%#/INFO.bloodline,hidden)][set(%#/INFO.bloodline,wizard)];
+    @fo %#=look
+-
+&CG.INFO.COVENANT CharGen=
+  $+covenant *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,covenants)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid covenant. Type +db/view covenants to see them all.)];
+    [set(%#,INFO.covenant:[extract([lattr([xget(#893,covenants)]/*)],[match([lattr([xget(#893,covenants)]/*)],%0)],1, )])][set(%#/INFO.covenant,hidden)][set(%#/INFO.covenant,wizard)];
+    @fo %#=look
+-
+&CG.INFO.TRIBE CharGen=
+  $+tribe *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,tribe)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid tribe. Type +db/view tribe to see them all.)];
+    [set(%#,INFO.tribe:[extract([lattr([xget(#893,tribe)]/*)],[match([lattr([xget(#893,tribe)]/*)],%0)],1, )])][set(%#/INFO.tribe,hidden)][set(%#/INFO.tribe,wizard)];
+    @fo %#=look
+-
+&CG.INFO.AUSPICE CharGen=
+  $+auspice *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,auspice)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid auspice. Type +db/view auspice to see them all.)];
+    [set(%#,INFO.auspice:[extract([lattr([xget(#893,auspice)]/*)],[match([lattr([xget(#893,auspice)]/*)],%0)],1,)])][set(%#/INFO.auspice,hidden)][set(%#/INFO.auspice,wizard)];
+    @fo %#=look
+-
+&CG.INFO.LODGE CharGen=
+  $+lodge *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,lodges)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid lodge. Type +db/view lodges to see them all.)];
+    [set(%#,INFO.lodge:[extract([lattr([xget(#893,lodges)]/*)],[match([lattr([xget(#893,lodges)]/*)],%0)],1, )])][set(%#/INFO.lodge,hidden)][set(%#/INFO.lodge,wizard)];
+    @fo %#=look
+-
+&CG.INFO.PATH CharGen=
+  $+path *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,path)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid path. Type +db/view path to see them all.)];
+    [set(%#,INFO.path:[extract([lattr([xget(#893,path)]/*)],[match([lattr([xget(#893,path)]/*)],%0)],1, )])][set(%#/INFO.path,hidden)][set(%#/INFO.path,wizard)];
+    @fo %#=look
+-
+&CG.INFO.ORDER CharGen=
+  $+order *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,order)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid order. Type +db/view order to see them all.)];
+    [set(%#,INFO.order:[extract([lattr([xget(#893,order)]/*)],[match([lattr([xget(#893,order)]/*)],%0)],1, )])][set(%#/INFO.order,hidden)][set(%#/INFO.order,wizard)];
+    @fo %#=look
+-
+&CG.INFO.LEGACY CharGen=
+  $+legacy *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,legacies)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid legacy. Type +db/view legacies to see them all.)];
+    [set(%#,INFO.legacy:[extract([lattr([xget(#893,legacies)]/*)],[match([lattr([xget(#893,legacies)]/*)],%0)],1, )])][set(%#/INFO.legacies,hidden)][set(%#/INFO.legacies,wizard)];
+    @fo %#=look
+-
+&CG.INFO.CONSPIRACY CharGen=
+  $+conspiracy *:
+    @break [hasflag(%#,approved)];
+    @assert [match([cat([lattr([xget(#893,Conspiracies)]/*)],[lattr([xget(#893,Compacts)]/*)])],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid Compact or Conspiracy. Type +db/view Compacts and +db/view Conspiracies to see them all.)];
+    [set(%#,INFO.conspiracy:%0)][set(%#/INFO.conspiracy,hidden)][set(%#/INFO.conspiracy,wizard)];
+    @fo %#=look
+-
+&CG.INFO.ARCHETYPE CharGen=
+  $+archetype *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,archetype)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid archetype. Type +db/view archetype to see them all.)];
+    [set(%#,INFO.archetype:[ucstr(%0)])][set(%#/INFO.archetype,hidden)][set(%#/INFO.archetype,wizard)];
+    @fo %#=look
+-
+&CG.INFO.BLOODLINE CharGen=
+  $+threshold *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,threshold)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid threshold. Type +db/view threshold to see them all.)];
+    [set(%#,INFO.threshold:[ucstr(%0)])][set(%#/INFO.threshold,hidden)][set(%#/INFO.threshold,wizard)];
+    @fo %#=look
+-
+&CG.VETERANCY.TIER CharGen=
+  $+tier *:
+    @break [hasflag(%#,approved)];
+    @assert [or(and(match(xget(%#,info.race), vampire), match(0 1 2 3 4 5 6,%0)), match(0 1 2 3,%0))]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid tier. Please pay attention to the room tier levels and just use the number. So tier 1 is just +tier 1.)];
+    [set(%#,INFO.tier:%0)][set(%#/INFO.tier,hidden)][set(%#/INFO.tier,wizard)];
+    @fo %#=look
+-
+&CG.ATTRIBUTE.CHOOSE CharGen=
+  $+choose *:
+    @break [hasflag(%#,Approved)];
+    [switch([num(where(%#))],#164,[u(#889/CG.CHOOSER.ATTRIBUTES,%0,%#)],#167,[u(#889/CG.CHOOSER.ABILITIES,%0,%#)])]
+-
+&CG.SETBASEATTRS CharGen=
+  [set(%0,ATTR.INT:1)][set(%0,ATTR.WITS:1)][set(%0,ATTR.STR:1)][set(%0,ATTR.PRE:1)][set(%0,ATTR.DEX:1)][set(%0,ATTR.MANIP:1)][set(%0,ATTR.RES:1)][set(%0,ATTR.STAM:1)][set(%0,ATTR.COMP:1)][set(%0,info.size:5)][set(%0/ATTR.int,hidden)][set(%0/ATTR.int,w)][set(%0/ATTR.wits,hidden)][set(%0/ATTR.wits,w)][set(%0/ATTR.str,hidden)][[set(%0/ATTR.str,w)][set(%0/ATTR.pre,hidden)][set(%0/ATTR.pre,w)][set(%0/ATTR.dex,hidden)][set(%0/ATTR.dex,w)][set(%0/ATTR.manip,hidden)][set(%0/ATTR.manip,w)][set(%0/ATTR.res,hidden)][set(%0/ATTR.res,w)][set(%0/ATTR.stam,hidden)][set(%0/ATTR.stam,w)][set(%0/ATTR.comp,hidden)][set(%0/ATTR.comp,w)][set(%0/info.size,hidden)][set(%0/info.size,w)][set(%#,adv.powerstat:1)][set(%#/adv.powerstat,hidden)][set(%#/adv.powerstat,w)][set(%#,adv.morality:1)][set(%#/adv.morality,hidden)][set(%#/adv.morality.w)]
+-
+&CG.ATTRIBUTE.RAISE CharGen=
+  $+raise/attr *=*:
+    @break [hasflag(%#,approved)];
+    @assert [match(INTELLIGENCE RESOLVE WITS STRENGTH DEXTERITY STAMINA PRESENCE MANIPULATION COMPOSURE,[ucstr(%0)]*)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid attribute.)];
+    [setq(0,[switch([extract(INTELLIGENCE RESOLVE WITS STRENGTH DEXTERITY STAMINA PRESENCE MANIPULATION COMPOSURE,[match(INTELLIGENCE RESOLVE WITS STRENGTH DEXTERITY STAMINA PRESENCE MANIPULATION COMPOSURE,[ucstr(%0)]*)],1)],INTELLIGENCE,int,RESOLVE,res,WITS,wits,STRENGTH,str,DEXTERITY,dex,STAMINA,stam,PRESENCE,pre,MANIPULATION,manip,COMPOSURE,comp)])];
+    @break [gte([add([xget(%#,ATTR.[r(0)])],%1)],6)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't raise attributes above 5 in CG.)];
+    @break [eq([add([xget(%#,ATTR.[r(0)])],%1)],5)]=[if([switch([if([member(INT WITS RES,[ucstr([r(0)])])],1,0)][if([member(STR DEX STAM,[ucstr([r(0)])])],1,0)][if([member(PRE MANIP COMP,[ucstr([r(0)])])],1,0)],100,[gte([sub([xget(%#,ATTR.MPTS)],[sub(5,[xget(%#,attr.[r(0)])])])],0)],010,[gte([sub([xget(%#,ATTR.PPTS)],[sub(5,[xget(%#,attr.[r(0)])])],0)],0)],001,[gte([sub([xget(%#,ATTR.SPTS)],[sub(5,[xget(%#,attr.[r(0)])])])],0)])],[switch([if([member(INT WITS RES,[ucstr([r(0)])])],1,0)][if([member(STR DEX STAM,[ucstr([r(0)])])],1,0)][if([member(PRE MANIP COMP,[ucstr([r(0)])])],1,0)],100,[set(%#,attr.mpts:[add([dec([xget(%#,attr.[r(0)])])],[xget(%#,attr.mpts)])])][set(%#,ATTR.[r(0)]:5)][set(%#,ATTR.MPTS:[sub([xget(%#,ATTR.MPTS)],5)])],010,[set(%#,attr.mpts:[add([dec([xget(%#,attr.[r(0)])])],[xget(%#,attr.mpts)])])][set(%#,ATTR.[r(0)]:5)][set(%#,ATTR.PPTS:[sub([xget(%#,ATTR.PPTS)],5)])],001,[set(%#,attr.mpts:[add([dec([xget(%#,attr.[r(0)])])],[xget(%#,attr.mpts)])])][set(%#,ATTR.[r(0)]:5)][set(%#,ATTR.SPTS:[sub([xget(%#,ATTR.SPTS)],5)])])],[pemit(%#,[ansi(hr,CG:)]%bIn order to raise a stat to five you'd need 5pts. You don't have that many left.)])][pemit(%#,[u(#164/table)])];
+    @assert [switch([if([member(INT WITS RES,[ucstr([r(0)])])],1,0)][if([member(STR DEX STAM,[ucstr([r(0)])])],1,0)][if([member(PRE MANIP COMP,[ucstr([r(0)])])],1,0)],100,[gte([sub([xget(%#,ATTR.MPTS)],%1)],0)],010,[gte([sub([xget(%#,ATTR.PPTS)],%1)],0)],001,[gte([sub([xget(%#,ATTR.SPTS)],%1)],0)])]=[pemit(%#,[ansi(hr,CG:)]%bYou don't have enough points left.)];
+    [set(%#,ATTR.[r(0)]:[add([xget(%#,ATTR.[r(0)])],%1)])][switch([if([member(INT WITS RES,[ucstr([r(0)])])],1,0)][if([member(STR DEX STAM,[ucstr([r(0)])])],1,0)][if([member(PRE MANIP COMP,[ucstr([r(0)])])],1,0)],100,[set(%#,ATTR.MPTS:[sub([xget(%#,ATTR.MPTS)],%1)])],010,[set(%#,ATTR.PPTS:[sub([xget(%#,ATTR.PPTS)],%1)])],001,[set(%#,ATTR.SPTS:[sub([xget(%#,ATTR.SPTS)],%1)])])];
+    [pemit(%#,%r[u(#164/TABLE)]%r)]
+-
+&CG.ATTRIBUTE.LOWER CharGen=
+  $+lower/attr *=*:
+    @break [hasflag(%#,approved)];
+    @assert [match(INTELLIGENCE RESOLVE WITS STRENGTH DEXTERITY STAMINA PRESENCE MANIPULATION COMPOSURE,[ucstr(%0)]*)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid attribute.)];
+    [setq(0,[switch([extract(INTELLIGENCE RESOLVE WITS STRENGTH DEXTERITY STAMINA PRESENCE MANIPULATION COMPOSURE,[match(INTELLIGENCE RESOLVE WITS STRENGTH DEXTERITY STAMINA PRESENCE MANIPULATION COMPOSURE,[ucstr(%0)]*)],1)],INTELLIGENCE,int,RESOLVE,res,WITS,wits,STRENGTH,str,DEXTERITY,dex,STAMINA,stam,PRESENCE,pre,MANIPULATION,manip,COMPOSURE,comp)])];
+    @assert [gte([sub([xget(%#,ATTR.[r(0)])],%1)],1)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't lower your attributes below 1.)];
+    @break [eq([xget(%#,ATTR.[r(0)])],5)]=[set(%#,ATTR.[r(0)]:1)][switch([if([member(INT WITS RES,[ucstr([r(0)])])],1,0)][if([member(STR DEX STAM,[ucstr([r(0)])])],1,0)][if([member(PRE MANIP COMP,[ucstr([r(0)])])],1,0)],100,[set(%#,ATTR.MPTS:5)],010,[set(%#,ATTR.PPTS:5)],001,[set(%#,ATTR.SPTS:5)])][pemit(%#,%r[u(#164/TABLE)]%r)];
+    [set(%#,ATTR.[r(0)]:[sub([xget(%#,ATTR.[r(0)])],%1)])][switch([if([member(INT WITS RES,[ucstr([r(0)])])],1,0)][if([member(STR DEX STAM,[ucstr([r(0)])])],1,0)][if([member(PRE MANIP COMP,[ucstr([r(0)])])],1,0)],100,[set(%#,ATTR.MPTS:[add([xget(%#,ATTR.MPTS)],%1)])],010,[set(%#,ATTR.PPTS:[add([xget(%#,ATTR.PPTS)],%1)])],001,[set(%#,ATTR.SPTS:[add([xget(%#,ATTR.SPTS)],%1)])])];
+    [pemit(%#,%r[u(#164/table)]%r)]
+-
+&CG.ADVANTAGE.PLASMCALC CharGen=
+  [switch(%0,1,14,2,18,3,22,4,26,5,30,6,40,7,50,8,60,9,75,10,100)]
+-
+&CG.CHOOSER.ATTRIBUTES CharGen=
+  [switch(0, ulocal(#889/FUNC.VALIDATEPRIORITIES, %0),[pemit(%1,[ansi(hr,CG:)]%bThat is not a valid priority selection.)], [switch(%0,PSM,[set(%1,ATTR.PPTS:5)][set(%1,ATTR.SPTS:4)][set(%1,ATTR.MPTS:3)][set(%1/ATTR.PPTS,Hidden)][set(%1/ATTR.PPTS,W)][set(%1/ATTR.SPTS,Hidden)][set(%1/ATTR.SPTS,W)][set(%1/ATTR.MPTS,Hidden)][set(%1/ATTR.MPTS,W)],PMS,[set(%1,ATTR.PPTS:5)][set(%1,ATTR.SPTS:3)][set(%1,ATTR.MPTS:4)][set(%1/ATTR.PPTS,Hidden)][set(%1/ATTR.PPTS,W)][set(%1/ATTR.SPTS,Hidden)][set(%1/ATTR.SPTS,W)][set(%1/ATTR.MPTS,Hidden)][set(%1/ATTR.MPTS,W)],MPS,[set(%1,ATTR.PPTS:4)][set(%1,ATTR.SPTS:3)][set(%1,ATTR.MPTS:5)][set(%1/ATTR.PPTS,Hidden)][set(%1/ATTR.PPTS,W)][set(%1/ATTR.SPTS,Hidden)][set(%1/ATTR.SPTS,W)][set(%1/ATTR.MPTS,Hidden)][set(%1/ATTR.MPTS,W)],MSP,[set(%1,ATTR.PPTS:3)][set(%1,ATTR.SPTS:4)][set(%1,ATTR.MPTS:5)][set(%1/ATTR.PPTS,Hidden)][set(%1/ATTR.PPTS,W)][set(%1/ATTR.SPTS,Hidden)][set(%1/ATTR.SPTS,W)][set(%1/ATTR.MPTS,Hidden)][set(%1/ATTR.MPTS,W)],SPM,[set(%1,ATTR.PPTS:4)][set(%1,ATTR.SPTS:5)][set(%1,ATTR.MPTS:3)][set(%1/ATTR.PPTS,Hidden)][set(%1/ATTR.PPTS,W)][set(%1/ATTR.SPTS,Hidden)][set(%1/ATTR.SPTS,W)][set(%1/ATTR.MPTS,Hidden)][set(%1/ATTR.MPTS,W)],SMP,[set(%1,ATTR.PPTS:3)][set(%1,ATTR.SPTS:5)][set(%1,ATTR.MPTS:4)][set(%1/ATTR.PPTS,Hidden)][set(%1/ATTR.PPTS,W)][set(%1/ATTR.SPTS,Hidden)][set(%1/ATTR.SPTS,W)][set(%1/ATTR.MPTS,Hidden)][set(%1/ATTR.MPTS,W)])][set(%1,PRI:1)][pemit(%1,[ansi(hr,CG:)]%bPriorities set to %0.)][u(#889/CG.SETBASEATTRS,%1)])]
+-
+&CG.ATTR.RESET CharGen=
+  $+reset/attr:
+    [iter([lattr(%#/ATTR*)],[set(%#,##:)], )][pemit(%#,[ansi(hr,CG:)]%bAttribute info reset.)]
+-
+&CG.CHOOSER.ABILITIES CharGen=
+  [switch(0, ulocal(#889/FUNC.VALIDATEPRIORITIES, %0),[pemit(%1,[ansi(hr,CG:)]%bThat is not a valid priority selection.)],[switch(%0,PSM,[set(%1,ABIL.PPTS:11)][set(%1,ABIL.SPTS:7)][set(%1,ABIL.MPTS:4)][set(%1/ABIL.PPTS,Hidden)][set(%1/ABIL.PPTS,W)][set(%1/ABIL.SPTS,Hidden)][set(%1/ABIL.SPTS,W)][set(%1/ABIL.MPTS,Hidden)][set(%1/ABIL.MPTS,W)],PMS,[set(%1,ABIL.PPTS:11)][set(%1,ABIL.SPTS:4)][set(%1,ABIL.MPTS:7)][set(%1/ABIL.PPTS,Hidden)][set(%1/ABIL.PPTS,W)][set(%1/ABIL.SPTS,Hidden)][set(%1/ABIL.SPTS,W)][set(%1/ABIL.MPTS,Hidden)][set(%1/ABIL.MPTS,W)],MPS,[set(%1,ABIL.PPTS:7)][set(%1,ABIL.SPTS:4)][set(%1,ABIL.MPTS:11)][set(%1/ABIL.PPTS,Hidden)][set(%1/ABIL.PPTS,W)][set(%1/ABIL.SPTS,Hidden)][set(%1/ABIL.SPTS,W)][set(%1/ABIL.MPTS,Hidden)][set(%1/ABIL.MPTS,W)],MSP,[set(%1,ABIL.PPTS:4)][set(%1,ABIL.SPTS:7)][set(%1,ABIL.MPTS:11)][set(%1/ABIL.PPTS,Hidden)][set(%1/ABIL.PPTS,W)][set(%1/ABIL.SPTS,Hidden)][set(%1/ABIL.SPTS,W)][set(%1/ABIL.MPTS,Hidden)][set(%1/ABIL.MPTS,W)],SPM,[set(%1,ABIL.PPTS:7)][set(%1,ABIL.SPTS:11)][set(%1,ABIL.MPTS:4)][set(%1/ABIL.PPTS,Hidden)][set(%1/ABIL.PPTS,W)][set(%1/ABIL.SPTS,Hidden)][set(%1/ABIL.SPTS,W)][set(%1/ABIL.MPTS,Hidden)][set(%1/ABIL.MPTS,W)],SMP,[set(%1,ABIL.PPTS:4)][set(%1,ABIL.SPTS:11)][set(%1,ABIL.MPTS:7)][set(%1/ABIL.PPTS,Hidden)][set(%1/ABIL.PPTS,W)][set(%1/ABIL.SPTS,Hidden)][set(%1/ABIL.SPTS,W)][set(%1/ABIL.MPTS,Hidden)][set(%1/ABIL.MPTS,W)])][set(%1,ABIL.SPRI:1)][pemit(%#,[ansi(hr,CG:)]%bPriorities set to %0.)][u(#889/cg.setbaseabils,%#)][pemit(%#,[u(#167/table)])])]
+-
+&MENTAL-LIST CharGen=
+  ACADEMICS|COMPUTER|CRAFTS|INVESTIGATION|MEDICINE|OCCULT|POLITICS|SCIENCE
+-
+&SOCIAL-LIST CharGen=
+  ANIMAL-KEN|EMPATHY|EXPRESSION|INTIMIDATION|PERSUASION|SOCIALIZE|STREETWISE|SUBTERFUGE
+-
+&PHYSICAL-LIST CharGen=
+  ATHLETICS|BRAWL|DRIVE|FIREARMS|LARCENY|STEALTH|SURVIVAL|WEAPONRY
+-
+&CG.ABIL.RAISE CharGen=
+  $+skil/raise *=*:
+    @break [hasflag(%#,approved)];
+    @assert [match([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[ucstr(%0)]*,|)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid ability. Check your entry and try again.)];
+    [setq(0,[extract([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[match([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[ucstr(%0)]*,|)],1,|)])];
+    @break [gte([add(xget(%#,ABIL.[ucstr([r(0)])]),%1)],6)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't raise abilities above 5)];
+    @assert [switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[if(gte(sub(xget(%#,abil.spts),%1),0),1,0)],010,[if(gte(sub(xget(%#,abil.ppts),%1),0),1,0)],001,[if(gte(sub(xget(%#,abil.mpts),%1),0),1,0)])]=[pemit(%#,[ansi(hr,CG:)]%bYou don't have enough points.)];
+    @break [eq(add(xget(%#,abil.[ucstr([r(0)])]),%1),5)]=[switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[if([gte(xget(%#,ABIL.SPTS),[sub(6,[xget(%#,abil.[r(0)])])])],[set(%#,abil.spts:[add(xget(%#,abil.[r(0)]),xget(%#,abil.spts))])][set(%#,Abil.[ucstr([r(0)])]:5)][set(%#,abil.spts:[sub(xget(%#,abil.spts),6)])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to 5.)],[pemit(%#,[ansi(hr,CG:)]%bThat requires 6 pts and you don't have enough.)])],010,[if([gte(xget(%#,ABIL.PPTS),[sub(6,[xget(%#,abil.[r(0)])])])],[set(%#,abil.ppts:[add(xget(%#,abil.%0),xget(%#,abil.ppts))])][set(%#,Abil.[ucstr([r(0)])]:5)][set(%#,abil.ppts:[sub(xget(%#,abil.ppts),6)])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to 5.)],[pemit(%#,[ansi(hr,CG:)]%bThat requires 6 pts and you don't have enough.)])],001,[if([gte(xget(%#,ABIL.MPTS),[sub(6,[xget(%#,abil.[r(0)])])])],[set(%#,abil.mpts:[add(xget(%#,abil.[r(0)]),xget(%#,abil.mpts))])][set(%#,Abil.[ucstr([r(0)])]:5)][set(%#,abil.mpts:[sub(xget(%#,abil.mpts),6)])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to 5.)],[pemit(%#,[ansi(hr,CG:)]%bThat requires 6 pts and you don't have enough.)])])];
+    [switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[set(%#,abil.[ucstr([r(0)])]:[add(xget(%#,abil.[ucstr([r(0)])]),%1)])][set(%#,abil.spts:[sub(xget(%#,abil.spts),%1)])],010,[set(%#,abil.[ucstr([r(0)])]:[add(xget(%#,abil.[ucstr([r(0)])]),%1)])][set(%#,abil.ppts:[sub(xget(%#,abil.ppts),%1)])],001,[set(%#,abil.[ucstr([r(0)])]:[add(xget(%#,abil.[ucstr([r(0)])]),%1)])][set(%#,abil.mpts:[sub(xget(%#,abil.mpts),%1)])])];
+    [pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to [xget(%#,abil.[r(0)])].)]
+-
+&CG.SETBASEABILS CharGen=
+  [iter([setunion([xget(#889,PHYSICAL-LIST)]|[xget(#889,MENTAL-LIST)]|[xget(#889,SOCIAL-LIST)],|)],[set(%0,ABIL.[trim(##,b)]:0)][set(%0/ABIL.##,hidden)][set(%#/ABIL.##,w)],|)][set(%0,Abil.:)]
+-
+&CG.ABIL.LOWER CharGen=
+  $lower *=*:
+    @break [hasflag(%#,approved)];
+    @assert [match([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[ucstr(%0)]*,|)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid skill. Check your entry and try again.)];
+    [setq(0,[extract([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[match([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[ucstr(%0)]*,|)],1,|)])];
+    @assert [gte(sub([xget(%#,abil.[r(0)])],%1),0)]=[pemit(%#,[ansi(hr,CG:)]%bCan't lower abilities below 0.)];
+    @break [eq([xget(%#,abil.[r(0)])],5)]=[switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr(%0)],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[set(%#,abil.[r(0)]:[sub(xget(%#,abil.[r(0)]),%1)])][set(%#,abil.spts:[inc([add([xget(%#,abil.spts)],%1)])])],010,[set(%#,abil.[r(0)]:[sub(xget(%#,abil.[r(0)]),%1)])][set(%#,abil.ppts:[inc([add([xget(%#,abil.ppts)],%1)])])],001,[set(%#,abil.[r(0)]:[sub(xget(%#,abil.[r(0)]),%1)])][set(%#,abil.mpts:[inc([add([xget(%#,abil.mpts)],%1)])])])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])]%bset to%b[xget(%#,abil.[r(0)])])];
+    [switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[set(%#,abil.%0:[sub(xget(%#,abil.[r(0)]),%1)])][set(%#,abil.spts:[add([xget(%#,abil.spts)],%1)])],010,[set(%#,abil.[r(0)]:[sub(xget(%#,abil.[r(0)]),%1)])][set(%#,abil.ppts:[add([xget(%#,abil.ppts)],%1)])],001,[set(%#,abil.[r(0)]:[sub(xget(%#,abil.[r(0)]),%1)])][set(%#,abil.mpts:[add([xget(%#,abil.mpts)],%1)])])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])]%bset to%b[xget(%#,abil.[r(0)])])]
+-
+&CG.INFO.PROFESSION CharGen=
+  $+profession *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,professions)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid profession. Type +db/view profession to see them all.)];
+    [set(%#,info.profession:%0)][set(%#/info.profession,hidden)][set(%#/info.profession,w)];
+    @fo %#=look
+-
+&CMD.SPEC.WSPEC CharGen=
+  $+wspec *=*:
+    @break [hasflag(%#,approved)];
+    [switch([xget(%#,info.auspice)],Rahu,[if(match(BRAWL INTIMIDATION SURVIVAL,[ucstr(%0)]),[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,wspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded a %1 speciality for %0.)],[pemit(%#,[ansi(hr,CG:)]%bThat's not a valid ability for Rahu.)])],Cahalith,[if(match(CRAFTS EXPRESSION PERSUASION,[ucstr(%0)]),[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,wspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded a %1 speciality for %0.)],[pemit(%#,[ansi(hr,CG:)]%bThat's not a valid ability for Cahalith.)])],Elodoth,[if(match(EMPATHY INVESTIGATION POLITICS,[ucstr(%0)]),[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,wspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded a %1 speciality for %0.)],[pemit(%#,[ansi(hr,CG:)]%bThat's not a valid ability for Elodoth.)])],Ithaeur,[if(member(ANIMAL-KEN|MEDICINE|OCCULT,[ucstr(%0)],|),[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,wspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded a %1 speciality for %0.)],[pemit(%#,[ansi(hr,CG:)]%bThat's not a valid ability for Ithaeur.)])],Irraka,[if(match(LARCENY STEALTH SUBTERFUGE,[ucstr(%0)]),[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,wspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded a %1 speciality for %0.)],[pemit(%#,[ansi(hr,CG:)]%bThat's not a valid ability for Irraka.)])])]
+-
+&CMD.SPEC CharGen=
+  $+spec *=*:
+    @break [hasattr(%#,approved)];
+    [switch([xget(%#,info.race)],Hunter,[if([gte([words(xget(%#,speclist),|)],4)],[pemit(%#,[ansi(hr,CG:)]%bYou already have the max amount of specialities.)],[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %1 speciality to ability %0.)])],Werewolf,[if([gte([words(xget(%#,speclist),|)],4)],[pemit(%#,[ansi(hr,CG:)]%bYou already have the max amount of specialities.)],[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %1 speciality to ability %0.)])],[if(gte([words(xget(%#,speclist),|)],3),[pemit(%#,[ansi(hr,CG:)]%bYou already have the max amount of specialities.)],[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %1 speciality to ability %0.)])])]
+-
+&CMD.SPEC.HSPEC CharGen=
+  $+hspec *=*:
+    @break [hasattr(%#,approved)];
+    [switch([xget(%#,info.race)],Hunter,[if([gte([words(xget(%#,speclist),|)],4)],[pemit(%#,[ansi(hr,CG:)]%bYou already have the max amount of specialities.)],[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,hspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded %1 speciality to ability %0.)])],Werewolf,[if([gte([words(xget(%#,speclist),|)],4)],[pemit(%#,[ansi(hr,CG:)]%bYou already have the max amount of specialities.)],[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,hspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded %1 speciality to ability %0.)])],[if(gte([words(xget(%#,speclist),|)],3),[pemit(%#,[ansi(hr,CG:)]%bYou already have the max amount of specialities.)],[if(strlen(xget(%#,speclist)),[set(%#,speclist:[iter(xget(%#,speclist),##|,|,@@)]%0~%1)],[set(%#,speclist:%0~%1)][set(%#/speclist,hidden)][set(%#/speclist,w)])][set(%#,hspec:1)][pemit(%#,[ansi(hr,CG:)]%bAdded %1 speciality to ability %0.)])])]
+-
+&CG.MERITS.ADD CharGen=
+  $+merit/add */*=*:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,meritlist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    [setq(1,0)][iter(xget(%#,flawlist),[setq(1,[add(r(1),after(before(##,:),~))])],|,@@)];
+    @assert [gt([sub([add(7,r(1))],r(0))],0)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no merit points left.)];
+    @assert [gte([sub([sub([add(7,r(1))],r(0))],%1)],0)]=[pemit(%#,[ansi(hr,CG:)]%bYou don't have enough points.)];
+    [if(strlen(xget(%#,meritlist)),[set(%#,meritlist:[iter(xget(%#,meritlist),##|,|,@@)]%0~%2:%1)],[set(%#,meritlist:%0~%2:%1)][set(%#/meritlist,hidden)][set(%#/meritlist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %0.%1 to merits at level %2.)]
+-
+&CG.MERITS.ADD2 CharGen=
+  $+merit/qadd *=*:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,meritlist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    [setq(1,0)][iter(xget(%#,flawlist),[setq(1,[add(r(1),after(before(##,:),~))])],|,@@)];
+    @assert [gt([sub([add(7,r(1))],r(0))],0)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no merit points left.)];
+    @assert [gte([sub([sub([add(7,r(1))],r(0))],%1)],0)]=[pemit(%#,[ansi(hr,CG:)]%bYou don't have enough points.)];
+    [if(strlen(xget(%#,meritlist)),[set(%#,meritlist:[iter(xget(%#,meritlist),##|,|,@@)]%0~%1:None)],[set(%#,meritlist:%0~%1:None)][set(%#/meritlist,hidden)][set(%#/meritlist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %0 to merits at level %1.)]
+-
+&CG.CMD.MERIT.REM CharGen=
+  $+merit/rem *:
+    @break [hasflag(%#,approved)];
+    [set(%#,meritlist:[ldelete(xget(%#,meritlist),[match(xget(%#,meritlist),%0*,|)],|)])][pemit(%#,[ansi(hr,CG:)]%bRemoved %0 from merits.)]
+-
+&CG.CMD.FLAW.REM CharGen=
+  $+flaw/rem *:
+    @break [hasflag(%#,approved)];
+    [set(%#,flawlist:[ldelete(xget(%#,flawlist),[match(xget(%#,flawlist),%0*,|)],|)])][pemit(%#,[ansi(hr,CG:)]%bRemoved %0 from flaws.)]
+-
+&CG.FLAW.ADD2 CharGen=
+  $+flaw/qadd *=*:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,flawlist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    @assert [lt(words(xget(%#,flawlist),|),5)]=[pemit(%#,[ansi(hr,CG:)]%bYou can only have five flaws.)];
+    @assert [and([lt(r(0),7)],[lte([add(r(0),%1)],7)])]=[pemit(%#,[ansi(hr,CG:)]%bYou can only have 7 flaw pts.)];
+    [if(strlen(xget(%#,flawlist)),[set(%#,flawlist:[iter(xget(%#,flawlist),##|,|,@@)]%0~%1:None)],[set(%#,flawlist:%0~%1:None)][set(%#/flawlist,hidden)][set(%#/flawlist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %0 to flaws at level %1.)]
+-
+&CG.MERITS.RESET CharGen=
+  $+mf/reset:
+    @break [hasflag(%#,approved)];
+    [iter(lattr(%#/merit*),[set(%#,[edit(##,%b,_)]:)], ,@@)][iter(lattr(%#/flaw*),[set(%#,[edit(##,%b,_)]:)], ,@@)];
+    [pemit(%#,[ansi(hr,CG:)]%bReset merits and flaws.)]
+-
+&CMD.FREE.MORALITY CharGen=
+  $+morality *:
+    @break [hasflag(%#,approved)];
+    @break [gt(%0,10)]=[pemit(%#,[ansi(hr,CG:)]%bMorality only goes to 10.)];
+    [set(%#,info.morality:%0)][pemit(%#,[ansi(hr,CG:)]%bYour morality was set to %0.)]
+-
+&CMD.FREE.PURIFIED CharGen=
+  $+purified:
+    @break [hasflag(%#,approved)];
+    @break [hasattr(%#,pfree)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't restart freebie spends. If you messed up ask a staffer for help.)];
+    [set(%#,psiddhi:2)][set(%#,pskill:5)][set(%#,abil.occult:[add(xget(%#,abil.occult),1)])][set(%#,pfree:0)][set(%#/pfree,hidden)][set(%#/pskill,hidden)][set(%#/psiddhi,hidden)][set(%#,meritlist:[iter(xget(%#,meritlist),##|,|,@@)]Astral Projection~1:Siddhi)][pemit(%#,[ansi(hr,CG:)]%bYou're all set up. Enjoy and follow the directions!)]
+-
+&CMD.FREE.SIDDHI CharGen=
+  $+siddhi *:
+    @break [hasflag(%#,approved)];
+    @assert [gt(xget(%#,psiddhi),0)]=[pemit(%#,[ansi(hr,CG:)]%bYou already used all your siddhi points!)];
+    [setq(0,0)][set(%#,meritlist:[iter(xget(%#,meritlist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)],##)][setq(0,1)]|,|,@@)][if(not(r(0)),%0~1:Siddhi)])][pemit(%#,[ansi(hr,CG:)]%bAdded a point to %0)][set(%#,psiddhi:[dec([xget(%#,psiddhi)])])]
+-
+&CG.FREE.PSKILL CharGen=
+  $+pskill *:
+    @break [hasflag(%#,approved)];
+    @assert [lte([xget(%#,%0)],4)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't raise a skill above 5.)];
+    [set(%#,abil.%0:[inc(xget(%#,abil.%0))])][set(%#,pskill:[dec(xget(%#,pskill))])][pemit(%#,[ansi(hr,CG:)]%bIncreased %0.)]
+-
+&CG.FREE.TALENT CharGen=
+  $+talent *:
+    @break [hasflag(%#,approved)];
+    [switch(%0,Magic,[set(%#,info.talent:Magic)][pemit(%#,[ansi(hr,CG:)]%bYou set your talent to Magically Inclined.)],Mental,[set(%#,info.talent:Mental)][pemit(%#,[ansi(hr,CG:)]%bYou set your talent to Mentally Inclined.)],[pemit(%#,[ansi(hr,CG:)]%bThere are only two choices here.)])]
+-
+&CG.FREE.SOCIETY CharGen=
+  $+society *:
+    @break [hasflag(%#,approved)];
+    [set(%#,info.society:[edit(%0,%b,_)])][pemit(%#,[ansi(hr,CG:)]%bSet your society to %0.)]
+-
+&CMD.FREE.VSTART CharGen=
+  $+vstart:
+    @break [hasflag(%#,approved)];
+    @break [hasattr(%#,vfree)];
+    [set(%#,vdisc:3)][set(%#/vdisc,hidden)][set(%#,vfree:1)];
+    [pemit(%#,[ansi(hr,CG:)]%bOkay\, you're all set up!)]
+-
+&CMD.FREE.VATTR CharGen=
+  $+vattr *:
+    @break [hasflag(%#,approved)];
+    @break [eq(xget(%#,vattr),1)]=[pemit(%#,[ansi(hr,CG:)]%bYou already picked your favored attribute. If you messed up ask a staffer.)];
+    @break [gt(add(xget(%#,attr.[u(#889/AttrReturn,%0)]),1),5)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't set your attributes above five.)];
+    [set(%#,attr.[u(#889/AttrReturn,%0)]:[add(xget(%#,attr.[u(#889/AttrReturn,%0)]),1)])][set(%#,vattr:1)][pemit(%#,[ansi(hr,CG:)]%bAdded a dot to %0.)]
+-
+&CG.FREE.VDISC CharGen=
+  $+vdisc *:
+    @break [hasflag(%#,approved)];
+    @assert [xget(%#,vdisc)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no disciplines left to choose.)];
+    [if(strlen(xget(%#,disclist)),[setq(0,0)][set(%#,disclist:[iter(xget(%#,disclist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,disclist:%0~1:None)])][set(%#,vdisc:[dec(xget(%#,vdisc))])][set(%#/disclist,hidden)][set(%#/disclist,wizard)][pemit(%#,[ansi(hr,CG:)]%bAdded a dot to %0.)]
+-
+&ATTRRETURN CharGen=
+  [switch(%0,Strength,Str,Intelligence,Int,Wits,Wits,Presence,Pre,Dexterity,Dex,Manipulation,Manip,Resolve,Res,Stamina,Stam,Composure,Comp)]
+-
+&CG.FREE.WSTART CharGen=
+  $+wstart:
+    @break [hasflag(%#,approved)];
+    [switch(xget(%#,info.tribe),bloodtalons,[if(strlen(xget(%#,renownlist)),[set(%#,renownlist:[iter(xget(%#,renownlist),##|,|,@@)]Glory~1:None)],[set(%#,renownlist:Glory~1:None)][set(%#/renownlist,hidden)][set(%#/renownlist,w)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Glory*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Glory~1:None)])],[set(%#,giftlist:Glory~1:None)])],boneshadows,[if(strlen(xget(%#,renownlist)),[set(%#,renownlist:[iter(xget(%#,renownlist),##|,|,@@)]Wisdom~1:None)],[set(%#,renownlist:Wisdom~1:None)][set(%#/renownlist,hidden)][set(%#/renownlist,w)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Wisdom*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Wisdom~1:None)])],[set(%#,giftlist:Wisdom~1:None)])],huntersindarkness,[if(strlen(xget(%#,renownlist)),[set(%#,renownlist:[iter(xget(%#,renownlist),##|,|,@@)]Purity~1:0)],[set(%#,renownlist:Purity~1:None)][set(%#/renownlist,hidden)][set(%#/renownlist,w)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Purity*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Purity~1:None)])],[set(%#,giftlist:Purity~1:None)])],ironmasters,[if(strlen(xget(%#,renownlist)),[set(%#,renownlist:[iter(xget(%#,renownlist),##|,|,@@)]Cunning~1:None)],[set(%#,renownlist:Cunning~1:None)][set(%#/renownlist,hidden)][set(%#/renownlist,w)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Cunning*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Cunning~1:None)])],[set(%#,giftlist:Cunning~1:None)])],stormlords,[if(strlen(xget(%#,renownlist)),[set(%#,renownlist:[iter(xget(%#,renownlist),##|,|,@@)]Honor~1:None)],[set(%#,renownlist:Honor~1:None)][set(%#/renownlist,hidden)][set(%#/renownlist,w)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Honor*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Honor~1:None)])],[set(%#,giftlist:Honor~1:None)])],ghostwolves,[set(%#,rdots:3)])][switch(xget(%#,info.auspice),irraka,[if(strlen(xget(%#,renownlist)),[setq(0,0)][set(%#,renownlist:[iter(xget(%#,renownlist),[if(strmatch(before(##,~),*Cunning*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Cunning~1:None)])],[set(%#,renownlist:Cunning~1:None)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Cunning*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Cunning~1:None)])],[set(%#,giftlist:Cunning~1:None)])],cahalith,[if(strlen(xget(%#,renownlist)),[setq(0,0)][set(%#,renownlist:[iter(xget(%#,renownlist),[if(strmatch(before(##,~),*Glory*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Glory~1:None)])],[set(%#,renownlist:Glory~1:None)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Glory*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Glory~1:None)])],[set(%#,giftlist:Glory~1:None)])],Elodoth,[if(strlen(xget(%#,renownlist)),[setq(0,0)][set(%#,renownlist:[iter(xget(%#,renownlist),[if(strmatch(before(##,~),*Honor*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Honor~1:None)])],[set(%#,renownlist:Honor~1:None)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Honor*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Honor~1:None)])],[set(%#,giftlist:Honor~1:None)])],Rahu,[if(strlen(xget(%#,renownlist)),[setq(0,0)][set(%#,renownlist:[iter(xget(%#,renownlist),[if(strmatch(before(##,~),*Purity*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Purity~1:None)])],[set(%#,renownlist:Purity~1:None)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Purity*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Purity~1:None)])],[set(%#,giftlist:Purity~1:None)])],Ithaeur,[if(strlen(xget(%#,renownlist)),[setq(0,0)][set(%#,renownlist:[iter(xget(%#,renownlist),[if(strmatch(before(##,~),*Wisdom*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Wisdom~1:None)])],[set(%#,renownlist:Wisdom~1:None)])][if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*Wisdom*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|Wisdom~1:None)])],[set(%#,giftlist:Wisdom~1:None)])])][switch(xget(%#,info.tribe),ghostwolves,[set(%#,gdots:2)][set(%#,rdots:2)],[set(%#,gdots:1)][set(%#,rdots:1)])][pemit(%#,[ansi(hr,CG:)]%bYou're all set up. Pick your remaining Gifts and Renown.)][set(%#,wswitch:1)][set(%#/wswitch,hidden)][set(%#/rdots,hidden)][set(%#/gdots,hidden)][set(%#/giftlist,hidden)][set(%#/giftlist,w)]
+-
+&CG.FREE.WRENOWN CharGen=
+  $+wrenown *:
+    @break [hasflag(%#,approved)];
+    @assert [gte(xget(%#,rdots),1)]=[pemit(%#,[ansi(hr,CG:)]%bNo points left.)];
+    [if(strlen(xget(%#,renownlist)),[setq(0,0)][set(%#,renownlist:[iter(xget(%#,renownlist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,renownlist:%0~1:None)])][set(%#,rdots:[dec(xget(%#,rdots))])][pemit(%#,[ansi(hr,CG:)]%bAdded a dot to %0.)]
+-
+&CG.FREE.WGIFT CharGen=
+  $+wgift *:
+    @break [hasflag(%#,approved)];
+    [if(strlen(xget(%#,giftlist)),[setq(0,0)][set(%#,giftlist:[iter(xget(%#,giftlist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,giftlist:%0~1:None)])][set(%#,gdots:[dec(xget(%#,gdots))])][pemit(%#,[ansi(hr,CG:)]%bAdded a dot to %0)]
+-
+&CG.FREE.WRITUAL CharGen=
+  $+writual *:
+    @break [hasflag(%#,approved)];
+    @assert [gt(xget(%#,gdots),0)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no more points left.)];
+    [set(%#,abil.rituals:1)][set(%#/abil.rituals,hidden)][set(%#/abil.rituals,wizard)][set(%#,gdots:[dec(xget(%#,gdots))])][if(strlen(xget(%#,ritelist)),[setq(0,0)][set(%#,ritelist:[iter(xget(%#,ritelist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,ritelist:%0~1:None)])][set(%#/ritelist,hidden)][set(%#/ritelist,w)]
+-
+&CG.FREE.ARCANI CharGen=
+  $+arcanum */*/*/*:
+    @break [hasflag(%#,approved)];
+    [set(%#,Arcanalist:%0~2:None|%1~2:None|%2~1:None)][set(%#/arcanalist,hidden)][set(%#/arcanalist,wizard)][if(strlen(xget(%#,arcanalist)),[setq(0,0)][set(%#,arcanalist:[iter(xget(%#,arcanalist),[if(strmatch(before(##,~),*%3*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,arcanalist:%0~1:None)])][pemit(%#,[ansi(hr,CG:)]%bYou have set your arcani.)]
+-
+&CG.FREE.ROTE CharGen=
+  $+rote *:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,rotelist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    @assert [lt(r(0),6)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no rote points left.)];
+    [if(strlen(xget(%#,rotelist)),[setq(0,0)][set(%#,rotelist:[iter(xget(%#,rotelist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,rotelist:%0~1:None)])][pemit(%#,[ansi(hr,CG:)]%bAdded %0 as a rote.)]
+-
+&CG.INFO.COURT CharGen=
+  $+court *:
+    @break [hasflag(%#,approved)];
+    @assert [match([lattr([xget(#893,court)]/*)],%0)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid court. Type +db/view court to see them all.)];
+    [set(%#,INFO.court:[extract([lattr([xget(#893,court)]/*)],[match([lattr([xget(#893,court)]/*)],%0)],1, )])][set(%#/INFO.court,hidden)][set(%#/INFO.court,wizard)];
+    @fo %#=look
+-
+&CG.FREE.CONTRACT CharGen=
+  $+contracts *:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,contractlist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    @assert [lt(r(0),6)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no contract points left.)];
+    [if(strlen(xget(%#,contractlist)),[setq(0,0)][set(%#,contractlist:[iter(xget(%#,contractlist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,contractlist:%0~1:None)])][pemit(%#,[ansi(hr,CG:)]%bAdded a dot to %0.)]
+-
+&CG.FREE.KEY CharGen=
+  $+key */*:
+    @break [hasflag(%#,approved)];
+    [set(%#,key.%0:1)][set(%#,key.%1:1)][pemit(%#,[ansi(hr,CG:)]%bSet your keys to %0 and %1.)]
+-
+&CG.FREE.MANIFEST CharGen=
+  $+manifest *:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,manifestlist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    @assert [lt(r(0),3)]=[pemit(%#,[ansi(hr,CG:)]%bYou have no manifestation points left.)];
+    [if(strlen(xget(%#,manifestlist)),[setq(0,0)][set(%#,manifestlist:[iter(xget(%#,manifestlist),[if(strmatch(before(##,~),*%0*),[before(##,~)]~[inc(after(before(##,:),~))]:[after(after(##,:),~)][setq(0,1)],##)],|,|)][if(not(r(0)),|%0~1:None)])],[set(%#,manifestlist:%0~1:None)])][pemit(%#,[ansi(hr,CG:)]%bAdded a dot to %0.)][set(%#/manifestlist,hidden)][set(%#/manifestlist,wizard)]
+-
+&CMD.CG.CLEANUP CharGen=
+  $+cg/cleanup:
+    @break [hasflag(%#,approved)];
+    [iter(lattr(%#/*list),[set(%#/##,hidden)][set(%#/##,wizard)], ,@@)];
+    [if(xget(%#,info.tier),[u(#889/tierxp,%#)][set(%#,ftxp:1)][set(%#/FTXP,hidden)])];
+    [if(hasattr(%#,ftxp),[pemit(%#,[u(#182/ftxpdesc)])],[pemit(%#,[ansi(hr,CG:)]%bIt doesn't look like you have xp to spend so head on to the next room. If you get incentives, ask a staffer.)])];
+    [set(%#/xp.cur,hidden)];
+    [set(%#,adv.wp.cur:7)][set(%#/adv.wp.cur,hidden)][set(%#,adv.wp.cur,w)];
+    [set(%#,adv.wp.perm:7)][set(%#/adv.wp.perm,hidden)][set(%#/adv.wp.perm,w)];
+    [switch(xget(%#,info.race),CHANGELING,[set(%#,adv.energy:[u(#889/cg.advantage.energycalc,xget(%#,adv.powerstat))])],GEIST,[set(%#,adv.energy:[u(#889/cg.advantage.plasmcalc,xget(%#,adv.powerstat))])],MORTAL,,IMMORTAL,,[set(%#,adv.energy:[u(#889/cg.advantage.energycalc,xget(%#,adv.powerstat))])])][set(%#,adv.energy.cur:[xget(%#,adv.energy)])][set(%#/adv.energy.cur,hidden)][set(%#/adv.energy.cur,w)][switch(xget(%#,info.race),changeling,[set(%#,adv.energy.cur:[sub(xget(%#,adv.energy),2)])],geist,[set(%#,adv.energy.cur:[sub(xget(%#,adv.energy),2)])])]
+-
+&CG.TIERXP CharGen=
+  [switch(xget(%0,info.race),vampire,[if(gte(xget(%0,info.tier),5),[u(#889/elderxp,%0)],[u(#889/vampxp,%0)])],mage,[u(#889/magexp,%0)],mortal,[u(#889/mortalxp,%0)],immortal,[u(#889/immortalxp,%0)],werewolf,[u(#889/werexp,%0)],hunter,[u(#889/hunterxp,%0)],changeling,[u(#889/changexp,%0)],sin-eater,[u(#889/geistxp,%0)])]
+-
+&ELDERXP CharGen=
+  [if(hasattr(%0,info.actv),[switch(xget(%0,info.tier),5,[setq(0,[mul(10,[div([xget(%0,info.actv)],10)])])][u(#906/func.xp.add,%0,[r(0)],CG TIER XP)][pemit(%#,[ansi(hr,CG:)]%bWe have set your xp. Look at the room again.)],6,[setq(0,[mul(15,[div([xget(%0,info.actv)],10)])])][u(#906/func.xp.add,%0,[r(0)],CG TIER XP)][pemit(%#,[ansi(hr,CG:)]%bWe have set your xp. Look at the room again.)])],[pemit(%0,[ansi(hr,CG:)]%bWe notice you're a tier 5+ Elder. We need to know how many years of your requiem you've been awake to properly calculate XP. Please use +vactv # to set this.)])][set(%0/xp.cur,hidden)]
+-
+&CG.CMD.VACTV CharGen=
+  $+vactv *:
+    @break [hasflag(%#,approved)];
+    @assert [gt(%0,0)]=[pemit(%#,[ansi(hr,CG:)]%bCan't be 0.)];
+    @assert [lte(%0,500)]=[pemit(%#,[ansi(hr,CG:)]%bCan't be more than 500.)];
+    [set(%#,info.actv:%0)][u(#889/elderxp,%#)]
+-
+&VAMPXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,100,CG TIER XP)],4,[u(#906/Func.Xp.Add,%0,125,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&MAGEXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,120,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&WEREXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,120,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&CHANGEXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,120,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&GEISTXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,120,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&HUNTERXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,60,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,100,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&MORTALXP CharGen=
+  [switch(xget(%0,info.tier),2,[u(#906/Func.Xp.Add,%0,35,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],4,[u(#906/Func.Xp.Add,%0,100,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&IMMORTALXP CharGen=
+  [switch(xget(%0,info.tier),1,[u(#906/Func.Xp.Add,%0,25,CG TIER XP)],2,[u(#906/Func.Xp.Add,%0,50,CG TIER XP)],3,[u(#906/Func.Xp.Add,%0,75,CG TIER XP)],4,[u(#906/Func.Xp.Add,%0,100,CG TIER XP)])][pemit(%#,[ansi(hr,CG:)]%bWe have set your XP. Look at the room again!)]
+-
+&TIERXP CharGen=
+  [switch(xget(%0,info.race),vampire,[if(gte(xget(%0,info.tier),5),[u(#889/elderxp,%0)],[u(#889/vampxp,%0)])],mage,[u(#889/magexp,%0)],mortal,[u(#889/mortalxp,%0)],mortal+,[u(#889/mortalxp,%0)],immortal,[u(#889/immortalxp,%0)],werewolf,[u(#889/werexp,%0)],hunter,[u(#889/hunterxp,%0)],changeling,[u(#889/changexp,%0)],sin-eater,[u(#889/geistxp,%0)])]
+-
+&CG.ADVANTAGE.ENERGYCALC CharGen=
+  [switch(%0,1,10,2,11,3,12,4,13,5,14,6,15,7,20,8,30,9,50,10,100)]
+-
+&CMD.ABIL.RAISE CharGen=
+  $raise *=*:
+    @break [hasflag(%#,approved)];
+    @assert [match([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[ucstr(%0)]*,|)]=[pemit(%#,[ansi(hr,CG:)]%bThat is not a valid ability. Check your entry and try again.)];
+    [setq(0,[extract([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[match([setunion([xget(#889,social-list)]|[xget(#889,physical-list)]|[xget(#889,mental-list)]|,|)],[ucstr(%0)]*,|)],1,|)])];
+    @break [gte([add(xget(%#,ABIL.[ucstr([r(0)])]),%1)],6)]=[pemit(%#,[ansi(hr,CG:)]%bYou can't raise abilities above 5)];
+    @assert [switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[if(gte(sub(xget(%#,abil.spts),%1),0),1,0)],010,[if(gte(sub(xget(%#,abil.ppts),%1),0),1,0)],001,[if(gte(sub(xget(%#,abil.mpts),%1),0),1,0)])]=[pemit(%#,[ansi(hr,CG:)]%bYou don't have enough points.)];
+    @break [eq(add(xget(%#,abil.[ucstr([r(0)])]),%1),5)]=[switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[if([gte(xget(%#,ABIL.SPTS),[sub(6,[xget(%#,abil.[r(0)])])])],[set(%#,abil.spts:[add(xget(%#,abil.[r(0)]),xget(%#,abil.spts))])][set(%#,Abil.[ucstr([r(0)])]:5)][set(%#,abil.spts:[sub(xget(%#,abil.spts),6)])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to 5.)],[pemit(%#,[ansi(hr,CG:)]%bThat requires 6 pts and you don't have enough.)])],010,[if([gte(xget(%#,ABIL.PPTS),[sub(6,[xget(%#,abil.[r(0)])])])],[set(%#,abil.ppts:[add(xget(%#,abil.%0),xget(%#,abil.ppts))])][set(%#,Abil.[ucstr([r(0)])]:5)][set(%#,abil.ppts:[sub(xget(%#,abil.ppts),6)])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to 5.)],[pemit(%#,[ansi(hr,CG:)]%bThat requires 6 pts and you don't have enough.)])],001,[if([gte(xget(%#,ABIL.MPTS),[sub(6,[xget(%#,abil.[r(0)])])])],[set(%#,abil.mpts:[add(xget(%#,abil.[r(0)]),xget(%#,abil.mpts))])][set(%#,Abil.[ucstr([r(0)])]:5)][set(%#,abil.mpts:[sub(xget(%#,abil.mpts),6)])][pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to 5.)],[pemit(%#,[ansi(hr,CG:)]%bThat requires 6 pts and you don't have enough.)])])];
+    [switch([if(member(xget(#889,social-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,physical-list),[ucstr([r(0)])],|),1,0)][if(member(xget(#889,mental-list),[ucstr([r(0)])],|),1,0)],100,[set(%#,abil.[ucstr([r(0)])]:[add(xget(%#,abil.[ucstr([r(0)])]),%1)])][set(%#,abil.spts:[sub(xget(%#,abil.spts),%1)])],010,[set(%#,abil.[ucstr([r(0)])]:[add(xget(%#,abil.[ucstr([r(0)])]),%1)])][set(%#,abil.ppts:[sub(xget(%#,abil.ppts),%1)])],001,[set(%#,abil.[ucstr([r(0)])]:[add(xget(%#,abil.[ucstr([r(0)])]),%1)])][set(%#,abil.mpts:[sub(xget(%#,abil.mpts),%1)])])];
+    [pemit(%#,[ansi(hr,CG:)]%b[ucstr([r(0)])] set to [xget(%#,abil.[r(0)])].)]
+-
+&FUNC.VALIDATEPRIORITIES CharGen=
+  [@@(ARGS: Priority code: ex PSM)][if(member(PSM PMS SMP SPM MSP MPS, [ucstr(%0)]),1,0)]
+-
+&CG.CMD.MERIT.REM2 CharGen=
+  $+merit/rem */*:
+    @break [hasflag(%#,approved)];
+    [set(%#,meritlist:[ldelete(xget(%#,meritlist),[match(xget(%#,meritlist),%0*%1,|)],|)])][pemit(%#,[ansi(hr,CG:)]%bRemoved %0.%1 from merits.)]
+-
+&CG.FLAW.ADD CharGen=
+  $+flaw/add */*=*:
+    @break [hasflag(%#,approved)];
+    [setq(0,0)][iter(xget(%#,flawlist),[setq(0,[add(r(0),after(before(##,:),~))])],|,@@)];
+    @assert [lt(words(xget(%#,flawlist),|),5)]=[pemit(%#,[ansi(hr,CG:)]%bYou can only have five flaws.)];
+    @assert [lt(r(0),7)]=[pemit(%#,[ansi(hr,CG:)]%bYou can only have 7 flaw pts.)];
+    [if(strlen(xget(%#,flawlist)),[set(%#,flawlist:[iter(xget(%#,flawlist),##|,|,@@)][capstr(lcstr(%0))]~%2:[capstr(lcstr(%1))])],[set(%#,flawlist:%0~%2:%1)][set(%#/flawlist,hidden)][set(%#/flawlist,w)])][pemit(%#,[ansi(hr,CG:)]%bAdded %0.%1 to flaws at level %2.)]
+-
+&CG.CMD.FLAW.REM2 CharGen=
+  $+flaw/rem */*:
+    @break [hasflag(%#,approved)];
+    [set(%#,flawlist:[ldelete(xget(%#,flawlist),[match(xget(%#,flawlist),%0*%1,|)],|)])][pemit(%#,[ansi(hr,CG:)]%bRemoved %0.%1 From flaws.)]
+-
+&CMD.BDAY.YEAR CharGen=
+  $+bday/year *:
+    @break [hasflag(%#,approved)];
+    [set(%#,info.bday.year:%0)][set(%#/info.bday.year,hidden)][set(%#/info.bday.year,wizard)][pemit(%#,[ansi(hr,CG:)]%bYou set your Birth Year to %0.)]
+-
+&CG.CMD.APPLY CharGen=
+  $+apply:
+    @switch [hasattr(%#,applied)]=0,
+    {
+      @trigger #21/TRIG_CREATE=%#,#28,1,[name(%#)]'s Application,%r%t[name(%#)] has submitted their character application for a [u(%#/race)] and requires a staff member to review the application.,%#;
+      &applied %#=1;
+      @set %#/applied=hidden;
+      @set %#/applied=wizard;
+      @pemit %#=[ansi(hx,CharGen:)] You submit your character application. Please do not use this command again.;
+      @wait .3=@fo #16=+job/assign [u(#21/jobs_num)]=+App Staff
+    }
+    ,
+    {
+      @pemit %#=[ansi(hr,Error:)] You have already submitted your application. Please be patient.
+    }
+-
+&CMD.APPROVE CharGen=
+  $+approve *:
+    @assert [or(hasflag(%#,wizard),hasflag(%#,royal))];
+    @assert [pmatch(%0)]=[pemit(%#,[ansi(hr,CG:)]%bCan't find a player matching %0)];
+    [set([pmatch(%0)],APPROVED)][pemit(%#,[ansi(hr,CG:)]%bYou have approved %0)]
+-
+&CMD.SPEC.REM CharGen=
+  $+spec/rem *=*:
+    @break [hasflag(%#,approved)];
+    [set(%#,speclist:[ldelete(xget(%#,speclist),[match(xget(%#,speclist),*%0~*%1,|)],|)])])]
+-
